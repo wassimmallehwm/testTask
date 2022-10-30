@@ -5,6 +5,7 @@ export const Button = styled.button`
   //height: 40px;
   border-radius: 10px;
   margin: 5px;
+  margin-bottom: ${(props) => (props.last ? "30px" : "5px")};
   background: ${(props) => (props.primary ? "black" : "white")};
   color: ${(props) => (props.primary ? "white" : "black")};
   border: ${(props) => (props.primary ? "none" : "1px solid  #000")};

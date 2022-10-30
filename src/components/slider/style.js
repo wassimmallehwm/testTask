@@ -30,6 +30,8 @@ export const Slide = styled.div`
 
 export const Image = styled.img`
   height: 200px;
+  max-width: 170px;
+  margin: auto;
   object-fit: cover;
   border-radius: 10px;
 `;

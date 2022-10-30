@@ -1,4 +1,6 @@
+import { useRef } from 'react';
 import { Carousel } from 'react-responsive-carousel';
+import { ArrowLeftDark, ArrowRightDark } from '../../svgs';
 import {
   Image,
   Container,
@@ -7,12 +9,30 @@ import {
 
 const Slider = ({ images }) => {
 
+  const carouselRef = useRef()
+
+
   return (
     <RelativeContainer>
+      <button
+        style={{
+          cursor: 'pointer',
+          position: 'absolute',
+          top: '40%',
+          right: '-10px',
+          zIndex: '999',
+          border: 'none',
+          background: 'transparent'
+        }}
+        onClick={() => carouselRef?.current.decrement()}>
+        <ArrowRightDark />
+      </button>
       <Carousel
+        ref={carouselRef}
         infiniteLoop={true}
         swipeable={true}
         emulateTouch={true}
+        showArrows={false}
         showThumbs={false}
         showStatus={false}
       >
@@ -22,6 +42,19 @@ const Slider = ({ images }) => {
           </Container>
         ))}
       </Carousel>
+      <button
+        style={{
+          cursor: 'pointer',
+          position: 'absolute',
+          top: '40%',
+          left: '-10px',
+          zIndex: '999',
+          border: 'none',
+          background: 'transparent'
+        }}
+        onClick={() => carouselRef?.current.increment()}>
+        <ArrowLeftDark />
+      </button>
     </RelativeContainer>
   );
 };

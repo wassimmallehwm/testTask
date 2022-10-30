@@ -208,6 +208,18 @@ export const ButtonVolumeMobile = styled.button`
   right: 0px;
 `;
 
+export const ContainerPopup = styled.div`
+  position: sticky;
+  bottom: 24px;
+  width: ${(props) => (props.width ? "calc(25vw - 128px)" : "")};
+  margin: ${(props) => (props.auto ? "auto" : "")};
+  z-index: 11;
+  padding: 24px;
+  box-shadow: rgb(9 10 11 / 15%) 0px 3px 34px;
+  border-radius: 24px;
+  background: rgb(255, 255, 255);
+`;
+
 export const Sizes = styled.option`
   
 `;

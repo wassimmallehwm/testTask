@@ -16,7 +16,7 @@ import {
   ContainerCloseButton,
   ContainerButton,
   ContainerCloseButtonMobile,
-  TextMobile, ContainerModal, ContainerInnerModal
+  TextMobile, ContainerModal, ContainerInnerModal, ContainerPopup
 } from "./style/custom-styles";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -24,7 +24,7 @@ import { CustomButton, CustomSelectbox, PlayButton, Slider } from "./components"
 
 import productJson from "./product.json";
 import PlayerControl from "./components/playerControl/PlayerControl";
-import { ArrowLeft, ArrowRight, Times, VolumeOff, VolumeOn } from "./svgs";
+import { ArrowLeft, ArrowRight, ArrowRightDark, Times, VolumeOff, VolumeOn } from "./svgs";
 
 const init_progress = {
   played: 0,
@@ -73,6 +73,41 @@ function App() {
     setProgress(init_progress)
   }
 
+
+  useEffect(() => console.log(progress), [progress])
+
+  const reload = (ref) => {
+    ref.seekTo(0, 'seconds')
+  }
+
+  const elem = (prod, i, isSelected) => (
+    <WrapPlayer key={i} onClick={() => setPlay(!play)}>
+      {window?.innerWidth > 500
+        ? null
+        : <ContainerCloseButtonMobile>
+          <Times />
+        </ContainerCloseButtonMobile>
+      }
+      {
+        play === false && <PlayButton />
+      }
+      <ReactPlayer
+        ref={el => videoPlayer.current[i] = el}
+        className="react-player"
+        url={isSelected ? prod?.video : ''}
+        playing={isSelected ? play : false}
+        loop={true}
+        muted={isSelected ? volume : true}
+        pip={true}
+        onProgress={(progress) => {
+          isSelected ? setProgress(prev => progress) : setProgress(init_progress);
+        }}
+        playsinline={true}
+      />
+      <PlayerControl setVolume={setVolume} reload={() => reload(videoPlayer.current[i])} volume={volume} progress={progress} />
+    </WrapPlayer>
+  )
+
   return product && (
     <>
       <SliderBtn up onClick={prevSlide}>
@@ -87,6 +122,7 @@ function App() {
         <WrapControl>
           <Carousel
             ref={carouselRef}
+            renderItem={(item, { isSelected }) => elem(item.props.children, item.key, isSelected)}
             infiniteLoop={true}
             swipeable={true}
             emulateTouch={true}
@@ -99,31 +135,10 @@ function App() {
           >
             {productJson.map((prod, i) => {
               return (
-                <WrapPlayer key={i} onClick={() => setPlay(!play)}>
-                  {window?.innerWidth > 500
-                    ? null
-                    : <ContainerCloseButtonMobile>
-                      <Times />
-                    </ContainerCloseButtonMobile>
-                  }
-                  {
-                    play === false && <PlayButton />
-                  }
-                  <ReactPlayer
-                    ref={el => videoPlayer.current[i] = el}
-                    className="react-player"
-                    url={prod?.video}
-                    playing={play}
-                    loop={true}
-                    muted={volume}
-                    pip={true}
-                    onProgress={(progress) => {
-                      setProgress(progress);
-                    }}
-                    playsinline={true}
-                  />
-                  <PlayerControl setVolume={setVolume} reload={() => videoPlayer.current[i].seekTo(0, 'seconds')} volume={volume} progress={progress} />
-                </WrapPlayer>
+                <div key={i}>
+                  {prod}
+                </div>
+
               )
             })}
           </Carousel>
@@ -161,8 +176,21 @@ function App() {
             </ContainerSelect>
             <ContainerButton>
               <CustomButton title="Add to cart" primary />
-              <CustomButton title="Product details" />
+              <CustomButton title="Product details" last />
             </ContainerButton>
+            <ContainerPopup width>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                textAlign: 'center',
+                fontWeight: 'bold'
+              }}>
+                <span>My bag</span>
+                <span>1 items</span>
+                <span>View bag</span>
+              </div>
+              <CustomButton title="Go to checkout" primary />
+            </ContainerPopup>
           </Container>
         </Wrapper>
         <ButtonVolumeMobile onClick={() => setVolume(!volume)}>
@@ -214,8 +242,21 @@ function App() {
               </ContainerSelect>
               <ContainerButton>
                 <CustomButton title="Add to cart" primary />
-                <CustomButton title="Product details" />
+                <CustomButton title="Product details" last />
               </ContainerButton>
+              <ContainerPopup auto>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                textAlign: 'center',
+                fontWeight: 'bold'
+              }}>
+                <span>My bag</span>
+                <span>1 items</span>
+                <span>View bag</span>
+              </div>
+                <CustomButton title="Go to checkout" primary />
+              </ContainerPopup>
             </ContainerInnerModal>
           </ContainerModal>
           : ''}
